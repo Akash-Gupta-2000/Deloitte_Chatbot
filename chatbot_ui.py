@@ -1,21 +1,23 @@
 import streamlit as st
 import requests
-
-# FastAPI backend URL
-FASTAPI_URL = "http://127.0.0.1:8001/api/question"  # Update if hosted elsewhere
+from backend_api import get_answer
 
 # Set Page Config
 st.set_page_config(page_title="Deloitte Chatbot", layout="wide")
 
 # Custom CSS for styling
 st.markdown(
-   """
-<style>
+   """"
+   <style>
 
-    /* Remove space above title */
-    .main > div:first-child {
-        padding-top: 0px !important;
-        margin-top: 0px !important;
+    /* Remove spacing above the title */
+    .block-container {
+        padding-top: 1rem !important;
+    }
+
+    header, .main > div:first-child {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
     }
 
     /* Sidebar content */
@@ -37,45 +39,45 @@ st.markdown(
         width: fit-content;
         max-width: 80%;
     }
-    
+
     /* User messages */
     .user {
-        background-color: #21262d; /* Slightly lighter dark gray */
+        background-color: #21262d;
         color: white;
         align-self: flex-end;
     }
 
     /* Assistant messages */
     .assistant {
-        background-color: #b5d99c; /* Light Green */
+        background-color: #b5d99c;
         color: black;
         align-self: flex-start;
     }
 
     /* Tabs Styling */
     div[data-baseweb="tab"] {
-        background-color: #007A33 !important; /* Deloitte Green */
-        color: white !important; 
+        background-color: #007A33 !important;
+        color: white !important;
         padding: 10px;
         border-radius: 10px;
     }
 
     /* Active Tab */
     div[data-baseweb="tab"] [aria-selected="true"] {
-        background-color: #005a24 !important; /* Darker Green */
+        background-color: #005a24 !important;
         color: white !important;
     }
 
     /* Tab content */
     .stTabs {
-        background-color: #005a24 !important; /* Dark Green */
+        background-color: #005a24 !important;
         border-radius: 10px;
         padding: 1rem;
     }
 
     /* Ensuring inner tab content is visible */
     .tab-content {
-        background-color: #007A33 !important; /* Deloitte Green */
+        background-color: #007A33 !important;
         color: white !important;
         padding: 1rem;
         border-radius: 10px;
@@ -90,21 +92,21 @@ st.markdown(
 
     /* Clear Chat Button */
     .stButton>button {
-        background: #007A33; /* Deloitte Green */
+        background: #007A33;
         color: white;
         border-radius: 10px;
         padding: 10px 20px;
         font-size: 16px;
         border: none;
     }
+
     .stButton>button:hover {
-        background: #004d23; /* Slightly darker green */
+        background: #004d23;
     }
 
 </style>
-
-    """,
-    unsafe_allow_html=True
+""",
+   unsafe_allow_html=True
 )
 
 #Sidebar - Deloitte Logo (Uncomment and add logo path if needed)
@@ -164,9 +166,7 @@ if user_input:
 
     # Send request to FastAPI
     try:
-        response = requests.post(FASTAPI_URL, json={"question": user_input})
-        response_data = response.json()
-        answer = response_data.get("answer", "Sorry, I couldn't process that.")
+        answer = get_answer(user_input)
     except requests.exceptions.RequestException:
         answer = "Error connecting to the API. Please try again later."
 
@@ -175,7 +175,7 @@ if user_input:
     with chat_container:
         st.markdown(f'<div class="chat-message assistant">{answer}</div>', unsafe_allow_html=True)
 
-# Clear Chat Button
-if st.button("🔄 Clear Chat"):
-    st.session_state.messages = []
-    st.rerun()
+# # Clear Chat Button
+# if st.button("🔄 Clear Chat"):
+#     st.session_state.messages = []
+#     st.rerun()
