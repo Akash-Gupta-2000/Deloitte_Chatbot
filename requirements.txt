@@ -1,2 +1,15 @@
-﻿beautifulsoup4
-langchain_groq
+beautifulsoup4
+requests
+python-dotenv
+
+langchain
+langchain-community
+langchain-core
+langchain-groq
+langchain-google-genai
+
+faiss-cpu
+
+tqdm
+numpy
+streamlit
